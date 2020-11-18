@@ -1,7 +1,10 @@
+On fait un ls -la
+On voit que l'executable a les droits de level1
+
 On récupère le fichier level0 avec la commande scp : 
 
 scp -P 4242 level0@192.168.56.1:/home/user/level0/level0 .
-On décompte le fichier grace a cutter. On se rend compte en voyant le main, que le programme attend un argument. Si l’argument saisis correspond à 0x1a7, alors un shell est lancé. 
+On décompile le fichier grace a cutter. On se rend compte en voyant le main, que le programme attend un argument. Si l’argument saisis correspond à 0x1a7, alors un shell est lancé. 
 
 0x1a7 est égal à 403 en décimal
 
