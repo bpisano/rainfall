@@ -7,7 +7,7 @@ undefined4 main(undefined4 placeholder_0, char **envp)
     undefined4 uStack20;
     
     iVar1 = atoi(envp[1]);
-    if (atoi(argv[1]) == 423) {
+    if (iVar1 == 0x1a7) {
         uStack32 = __strdup("/bin/sh");
         uStack28 = 0;
         uStack20 = getegid();
@@ -16,7 +16,7 @@ undefined4 main(undefined4 placeholder_0, char **envp)
         setresuid(uStack24, uStack24, uStack24);
         execv("/bin/sh", &uStack32);
     } else {
-      	fwrite("No !\n", 1, 5, stderr);
+        _IO_fwrite("No !\n", 1, 5, _stderr);
     }
     return 0;
 }
