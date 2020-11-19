@@ -1,4 +1,6 @@
-En décompilant l'exécutable, on remarque que le programme compare une variable statique `m` à la valeur `0x40`. Il contient également un printf qui ne prend qu'un argument. Nous allons exploiter la faille format string.
+# Format String Exploitation
+
+En décompilant l'exécutable, on remarque que le programme compare une variable statique `m` à la valeur `0x40`. Il contient également un printf qui ne prend qu'un argument. Nous allons exploiter la faille `format string`.
 
 L'objectif est d'utiliser les modifiers de `printf` pour écrire à l'adresse de la variable `m`, la valeur `0x40` et ainsi valider la condition qui exécutera un shell.
 
@@ -59,7 +61,7 @@ AAAA
 0xbffff540:	0x00000040	0x00000b80	0x00000000	0xb7fde714
 ```
 
-On remarque que `printf` a écrit en mémoire notre chaine de caractère. Essayons maintenant d'utiliser le modifier `%p` qui sert à afficher l'adresse d'un pointer. Nous pouvons associer `%p` avec les modifiers `$4` qui sert à indiquer à `printf` qu'il faut utiliser le 4ème argument.
+On remarque que `printf` a écrit en mémoire notre chaine de caractère. Essayons maintenant d'utiliser le modifier `%p` qui sert à afficher l'adresse d'un pointer. Nous pouvons associer `%p` avec les modifiers `4$` qui sert à indiquer à `printf` qu'il faut utiliser le 4ème argument.
 ```
 AAAA%$4p
 AAAA0x41414141
@@ -75,9 +77,9 @@ AAAA0x41414141
 
 Si on raisonne de la manière dont `printf` s'exécute, il écrit d'abord `AAAA` en mémoire, puis affiche l'adresse du 4ème argument, qui est maintenant `0x41414141`.
 
-Il est également possible d'écrire dans la mémoire grace au modifier `%n`. `%n` écrit simplemement le nombre de charactères qui ont été affichés par `printf`. En combinant `%n` avec les modifiers `$4`, on peut ainsi écrire une certaine valeur à une adresse donnée.
+Il est également possible d'écrire dans la mémoire grace au modifier `%n`. `%n` écrit simplemement le nombre de charactères qui ont été affichés par `printf`. En combinant `%n` avec les modifiers `4$`, on peut ainsi écrire une certaine valeur à une adresse donnée.
 ```
-AAAA%$4n
+AAAA%4$n
 AAAA
 > (gdb) x/20wx $esp
 0xbffff500:	0xbffff510	0x00000200	0xb7fd1ac0	0xb7ff37d0
@@ -120,9 +122,9 @@ Non-debugging symbols:
 ```
 L'adresse de `m` est donc `0x0804988c`
 
-De manière abstraite, on peut représenter notre arguemtn de l'entrée standard de cette manière :
+De manière abstraite, on peut représenter notre argument de l'entrée standard de cette manière :
 ```
-adresse_m + 60_caractères + %$4n
+adresse_m + 60_caractères + %4$n
 ^           ^               ^
 4 octets  + 60 octets (=64) écrire la valeur 64 à
                             l'adresse du 4ème argument
