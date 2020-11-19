@@ -19,7 +19,7 @@ On décompile le fichier grace a cutter. On se rend compte en voyant le main, qu
 On fait donc `./level0 423`.
 Un shell s’ouvre. En faisant un `whoami` on voit qu'on est level1.
 
-On peut donc cat le fichier contenant le flag. 
+On peut donc `cat` le fichier contenant le flag. 
 ```console
 > ./level0 423  
 $ whoami
