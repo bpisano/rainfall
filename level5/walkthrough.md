@@ -1,8 +1,8 @@
 # Format String Exploitation
 
-En deecompilant l'exécutable, on se rend compte qu'il fait appel à la fonction `printf` puis, dans un second temps, à `exit`. On remarque aussi la présence d'une fonction `o` qui n'est jamais appelée et qui semble lancer un appel `system` avec `"/bin/sh"` en argument.
+En décompilant l'exécutable, on se rend compte qu'il fait appel à la fonction `printf` puis, dans un second temps, à `exit`. On remarque aussi la présence d'une fonction `o` qui n'est jamais appelée et qui semble lancer un appel `system` avec `"/bin/sh"` en argument.
 
-L'objectif est donc d'utiliser `printf` pour tenter d faire appel à la fonction `o`. La solution que nous avons trouvé est de remplacer l'adresse de la fonction `exit`, par l'adresse  de la fonction `o`.
+L'objectif est donc d'utiliser `printf` pour tenter de faire appel à la fonction `o`. La solution que nous avons trouvé est de remplacer l'adresse de la fonction `exit`, par l'adresse  de la fonction `o`.
 
 Il nous faut d'abord trouver l'adresse de ces deux fonctions. En utilisant `gdb`, on exécute :
 ```
