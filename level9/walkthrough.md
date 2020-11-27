@@ -105,9 +105,9 @@ Nous aurons donc besoin d'insérer `59` instructions `NOP`.
 Il est facile ensuite de déterminer `adresse_du_shell_code` et `adresse_pointeur_shell_code` en visualisant la mémoire. Reprenons notre visualisation mémoire avec la copie de nos caractères `AAAA` :
 ```
 0x804a00c:	0x41414141	0x00000000	0x00000000	0x00000000
-            ^           ^
-            adresse     shell code
-            shell code
+                ^           ^
+                adresse     shell code
+                shell code
 0x804a01c:	0x00000000	0x00000000	0x00000000	0x00000000
 0x804a02c:	0x00000000	0x00000000	0x00000000	0x00000000
 0x804a03c:	0x00000000	0x00000000	0x00000000	0x00000000
