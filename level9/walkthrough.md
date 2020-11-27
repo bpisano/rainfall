@@ -65,7 +65,7 @@ Starting program: /home/user/level9/level9 AAAA
 Breakpoint 1, 0x08048738 in N::setAnnotation(char*) ()
 > (gdb) x/30wx 0x0804a00c
 0x804a00c:	0x41414141	0x00000000	0x00000000	0x00000000
-            ^
+                ^
                 AAAA
 0x804a01c:	0x00000000	0x00000000	0x00000000	0x00000000
 0x804a02c:	0x00000000	0x00000000	0x00000000	0x00000000
