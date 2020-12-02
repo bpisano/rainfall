@@ -7,7 +7,7 @@ En décompilant l'exécutable, on remarque qu'il :
 
 On remarque aussi la présence d'une fonction `n` qui affiche le contenu du fichier `.pass` à l'aide de la fonction `cat`. L'objectif ici est clair, remplacer l'adresse de la fonction `m`, contenue à l'adresse allouée par `malloc`, par l'adresse de la fonction `n`. Ainsi, nous serons en mesure d'afficher le fichier `.pass`.
 
-Pour commencer, nous allons voir où `malloc` alloue de l'espace dasn la mémoire. Pour illustrer nos explications, nous allons lancer notre exécutable avec `gdb` en prenant en argument une chaine de caractères contenant `64` caractères `A`, soit la taille en octets allouée par le premier `malloc`.
+Pour commencer, nous allons voir où `malloc` alloue de l'espace dans la mémoire. Pour illustrer nos explications, nous allons lancer notre exécutable avec `gdb` en prenant en argument une chaine de caractères contenant `64` caractères `A`, soit la taille en octets allouée par le premier `malloc`.
 ```
 > gdb --args level6 "AAAA"
 [...]
@@ -41,7 +41,7 @@ Dump of assembler code for function main:
    0x080484d3 <+87>:	ret    
 End of assembler dump.
 ```
-On sait que la fonction `malloc` nous retourne un pointeur vers l'emplacement alloué. Nous allons donc `break` sur chaque instruciton suivant un appel à `malloc`, soit `+21` et `+37`.
+On sait que la fonction `malloc` nous retourne un pointeur vers l'emplacement alloué. Nous allons donc `break` sur chaque instruction suivant un appel à `malloc`, soit `+21` et `+37`.
 ```
 > (gdb) b *0x08048491
 Breakpoint 1 at 0x8048491
@@ -63,7 +63,7 @@ Breakpoint 2, 0x080484a1 in main ()
 > (gdb) x $eax
 0x804a050:	0x00000000
 ```
-Grace à `gdb`, on connait donc l'emplacement mémoire où sera copié notre premier arguement, et l'adresse où sera stockée l'adresse de `m`.
+Grace à `gdb`, on connait donc l'emplacement mémoire où sera copié notre premier argument, et l'adresse où sera stockée l'adresse de `m`.
 
 **Adresse allouée de la copie du premier argument**
 ```
