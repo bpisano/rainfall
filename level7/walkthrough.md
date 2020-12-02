@@ -25,7 +25,7 @@ puVar3 = (undefined4 *)malloc(8);
 uVar2 = malloc(8);
 puVar3[1] = uVar2;
 ```
-Passons à présent sur `gdb` et imprimons la nos emplcament mémoires alloués par `malloc` juste avant le premier appel à `strcpy`.
+Passons à présent sur `gdb` et imprimons nos emplacements mémoires alloués par `malloc` juste avant le premier appel à `strcpy`.
 ```
 > gdb level7 --args "AAAA" "BBBB"
 [...]
