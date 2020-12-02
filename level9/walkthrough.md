@@ -17,7 +17,7 @@ On remarque que `edx` est assigné juste après l'appel à la fonction `setAnnot
    0x08048680 <+140>:	mov    (%eax),%eax
    0x08048682 <+142>:	mov    (%eax),%edx
 ```
-On constate ici in `mov` de `esp+0x10` dans `eax`. Puis un `move` de `eax` dans `edx`. Cela revient à dire qu'on `move` `esp+0x10` dans `edx`. Voyons où pointe `esp+0x10` et imprimons le contenu de cette adresse pour le visualiser plus tard dans la mémoire.
+On constate ici un `mov` de `esp+0x10` dans `eax`. Puis un `move` de `eax` dans `edx`. Cela revient à dire qu'on `move` `esp+0x10` dans `edx`. Voyons où pointe `esp+0x10` et imprimons le contenu de cette adresse pour le visualiser plus tard dans la mémoire.
 ```
 > (gdb) x $esp+0x10
 0xbffff6a0:	0x0804a078
