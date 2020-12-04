@@ -56,7 +56,7 @@ Breakpoint 1 at 0x80485b4
 ```
 L'adresse de retour de la fonction `main` est donc située à l'adresse `0xbffff6ec`
 
-La fonction `pp` va copier les deux entrée de l'entrée standard dans le `buffer` et y concatener la deuxième entrée en ajoutant un espace au milieu. Autrement dit :
+La fonction `pp` va copier les deux entrée de l'entrée standard dans le `buffer` et y concaténer la deuxième entrée en ajoutant un espace au milieu. Autrement dit :
 ```
 Si
 Entrée_1 = AAAA
