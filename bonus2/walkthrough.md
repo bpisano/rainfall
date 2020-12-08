@@ -1,6 +1,6 @@
 # Ret2libc Exploitation
 
-En décompilant l'exécutable, que le programme prend 2 arguments. En explorant le code du programme, on remarque qu'il n'y a pas d'appel `system` pour lancer un `shell`. Il semblerait donc que nous allons devoir effectuer une redirection d'adresse pour lancer notre propre `shell`. On remarque également des appels aux fonctions `strncpy`, `memcmp`. Seulement, ces fonctions ne semblent pas exploitables pour écraser une adresse adresses. En revanche, le programme fait appel à `strcat` dans la fonction `greetuser` et semble concaténer un de nos arguments. Nous pouvons donc supposer qu'un exploit est possible ici. Plus précisement, nous pourrions utiliser cet appel à `strcat` pour écraser l'adresse de retour de la fonction `greetuser`.
+En décompilant l'exécutable, on remarque que le programme prend 2 arguments. En explorant le code du programme, on remarque qu'il n'y a pas d'appel `system` pour lancer un `shell`. Il semblerait donc que nous allons devoir effectuer une redirection d'adresse pour lancer notre propre `shell`. On remarque également des appels aux fonctions `strncpy`, `memcmp`. Seulement, ces fonctions ne semblent pas exploitables pour écraser une adresse. En revanche, le programme fait appel à `strcat` dans la fonction `greetuser` et semble concaténer un de nos arguments. Nous pouvons donc supposer qu'un exploit est possible ici. Plus précisement, nous pourrions utiliser cet appel à `strcat` pour écraser l'adresse de retour de la fonction `greetuser`.
 
 Vérifions cette hypothèses. Intéressons-nous d'abord aux `strcpy` dans la fonction `main`. Ceux-ci copient nos arguments à un emplacement mémoire.
 ```c
@@ -11,11 +11,11 @@ pcStack172 = envp[2];
 uStack168 = 0x20;
 strncpy();
 ```
-Le premier `strcpy` copie `0x28` (`40` en base 10) octets du premier argument en mémoire. Le second copie `0x20` (`32` en base 10) octets du second argument Observons l'endroit où ils sont copiés. Remplissons ces emplacements et imprimons la mémoire après l'appel au second `strcpy`.
+Le premier `strcpy` copie `0x28` (`40` en base 10) octets du premier argument en mémoire. Le second copie `0x20` (`32` en base 10) octets du second argument. Observons l'endroit où ils sont copiés. Remplissons ces emplacements et imprimons la mémoire après l'appel du second `strcpy`.
 ```
 > gdb bonus2
 [...]
-> (gdb) dias main
+> (gdb) disas main
 [...]
    0x08048574 <+75>:	mov    %eax,(%esp)
    0x08048577 <+78>:	call   0x80483c0 <strncpy@plt>
@@ -132,7 +132,7 @@ Actuellement, nous ne savons pas dans quelle condition notre programme s'est ex�
 0xbffff680:	0x41414141	0x41414141	0x41414141	0x41414141
 0xbffff690:	0x41414141	0x41414141
 ```
-En observant la zone de concaténation de `strcat`, on remarque qu'il a concaténer la chaîne `Hello` ainsi que notre premier argument. On y observe aussi notre second argument. En effet, on se rappelle que nos 2 arguments sont copiés à la suite dans la mémoire. Le premier argument n'est pas terminé par un `\0`. En parcourant notre premier argument, `strcat` va donc y inclure notre second argument, comme nous l'avions imagnié précédement.
+En observant la zone de concaténation de `strcat`, on remarque qu'il a concaténé la chaîne `Hello` ainsi que notre premier argument. On y observe aussi notre second argument. En effet, on se rappelle que nos 2 arguments sont copiés à la suite dans la mémoire. Le premier argument n'est pas terminé par un `\0`. En parcourant notre premier argument, `strcat` va donc y inclure notre second argument, comme nous l'avions imaginé précédement.
 
 `eip` étant stocké dans `ebp+0x04`, nous pouvons l'imprimer avec `gdb`.
 ```
