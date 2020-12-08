@@ -59,6 +59,7 @@ Essayons maintenant en donnant en argument la chaine de caractère `AAAA`. Nous 
 ```
 > (gdb) run
 AAAA%1$p
+[...]
 > (gdb) x $esp 
 0xbffff4c0:	0xbffff4f0
 > (gdb) x 0xbffff4f0
