@@ -64,7 +64,7 @@ Nous allons donc faire :
 ```
 On peut vérifier cela avec gdb.
 ```
-(gdb)x/20wx $esp
+> (gdb) x/16wx $esp
 [...]
 0xbffff6b0:	0xbffff6c4	0xbffff8e6	0x00000008	0x080482fd
 0xbffff6c0:	0xb7fd13e4	0x48530041	0x3d4c4c45	0x080484d1
