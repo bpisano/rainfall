@@ -143,7 +143,7 @@ On remarque que `eip` a été en partie écrasée grâce au `strcat`.
 
 Nous avons vérifié factuellement nos indications sur la `stack`.
 
-D'après nos tests, nous sommes limités sur la quantité d'octets concaténée via nos arguments. En revanche, nous avons profité de la chaîne de caractère `Hello` pour écrire plus loin en mémoire. Une chaîne de caractère plus grande semblerait intéressante à utiliser pour écrire encore plus loin et ainsi écraser la valeur de `eip`. Le première condition semble intéressante. Elle contient en effet une chaîne de caractère plus grande que `Hello`.
+D'après nos tests, nous sommes limités sur la quantité d'octets concaténée via nos arguments. En revanche, nous avons profité de la chaîne de caractères `Hello` pour écrire plus loin en mémoire. Une chaîne de caractères plus grande semblerait intéressante à utiliser pour écrire encore plus loin et ainsi écraser la valeur de `eip`. Le première condition semble intéressante. Elle contient en effet une chaîne de caractères plus grande que `Hello`.
 ```c
 if (_language == 1) {
     s1 = "Hyvää päivää "._0_4_;
@@ -218,7 +218,7 @@ arg_2 = fi�n?
 arg_8h = "LANG";
 pcVar2 = (char *)getenv();
 ```
-Pour résumer, `memcmp` compare 2 octets de notre variables d'environnement `LANG` à la chaîne `fi�n?`. En modifiant notre variable d'envionnement `LANG`, nous serions capable de passer la valeur de `_language` à `1` et ainsi utiliser la chaîne de caractère `Hyvää päivää ` lors de notre appel à `strcat`.
+Pour résumer, `memcmp` compare 2 octets de notre variables d'environnement `LANG` à la chaîne `fi�n?`. En modifiant notre variable d'envionnement `LANG`, nous serions capable de passer la valeur de `_language` à `1` et ainsi utiliser la chaîne de caractères `Hyvää päivää ` lors de notre appel à `strcat`.
 
 Puisque `memcmp` ne compare que 2 octets, il suffit simplement de changer notre variable d'environnement `LANG` à `fi`.
 ```
@@ -295,7 +295,7 @@ taille_second_argument = adresse_eip - adresse_buffer - (taille_Hyvää + taille
                        = 0x12
                        = 18 (base 10)
 ```
-Notre second argument devra donc faire `18` octets. Finalement, nous utilisons donc cette commande :
+Notre second argument devra donc faire `18` octets. Finalement, nous utilisons donc cette commande, incluant `[::-1]` qui permet, en `python`, d'inverser une chaîne de caractères.
 ```
 ./bonus2 `python -c 'print "A"*40'` `python -c 'print "B"*18 + "\xb7\xe6\xb0\x60"[::-1] + "OSEF" + "\xb7\xf8\xcc\x58"[::-1]'`
 ```
