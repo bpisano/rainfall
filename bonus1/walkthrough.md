@@ -15,7 +15,7 @@ if (arg1 < 10) {
 Il y a une contradiction entre ces deux conditions. Cela nous semble impossible d'arriver jusqu'au `bin/sh`. Visiblement la seule chose qui nous permettent de réaliser un exploit est le `memcpy`.
 
 Voici le prototype de la fonction `memcpy`:
-```
+```C
 void  *memcpy(void  *dest,  const  void  * src,  size_t n)
 ```
 On voit que le troisième argument de `memcpy` est un `size_t`. Le fait que cela soit un size_t va nous être très utile, puisque que c'est `non signé`.
