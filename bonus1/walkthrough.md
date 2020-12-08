@@ -59,7 +59,7 @@ Nous voulons maintenant savoir quelle valeur nous devons mettre afin que notre p
 Nous avons notre `adresse de cmp` ainsi que notre `adresse de début de buffer`.
 Nous allons donc faire :
 ```
-[Adresse de cmp] - [Adresse de début de buffer]
+[adresse de cmp] - [adresse de début de buffer]
 0xbffff6ec - 0xbffff6c4 = 0x28 = 40
 ```
 On peut vérifier cela avec gdb.
