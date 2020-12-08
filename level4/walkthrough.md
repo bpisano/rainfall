@@ -101,7 +101,7 @@ Pour obtenir l'addresse de `m`, nous pouvons faire :
 0x08049810  m
 ```
 
-L'addresse de m est donc `0x08049810`
+L'addresse de `m` est donc `0x08049810`.
 En `little-endian`, cela nous donne : `\x10\x98\x04\x08`.
 
 Nous ne pouvons pas faire d'`overflow` puisque notre programme attend `16930116` caractères. Néanmoins, nous pouvons utiliser le décalage dans `printf`, car le `%d` n'est pas écris dans le `stack`. Nous n'avons donc pas besoin de faire `A * 16930116` ce qui ne serait pas possible. 
