@@ -60,17 +60,17 @@ if (iVar2 == 0) {
     puts(auStack86);
 }
 ```
-Cette partie compare les chaînes de caractère `auStack152` à notre premier argument. Si le retour de `strcmp` est `0`, un `shell` est lancé.
+Cette partie compare les chaînes de caractères `auStack152` à notre premier argument. Si le retour de `strcmp` est `0`, un `shell` est lancé.
 
 ---
 
 Il semble évident, à partir de ces constatations, que nous allons devoir envoyer un argument précis à notre programme pour passer les différentes conditions menant à l'appel de la fonction `execl`.
 
-La fonction `strcmp` renvoie `0` si les deux chaînes sont identiques. Dans le cas contraire, elle renvoie la différence entre les deux caractères qui diffèrent. Il pourrait être intéressant de placer le `\0` au début de `auStack152` et ainsi comparer une chaîne de caractère vide avec notre premier argument vide lui aussi. Seulement, en envoyant `0` en argument de notre programme, `atoi` va bien convertir notre premier argument en `integer` `0`. En revanche, la comparaison va se faire entre la chaîne vide `auStack152`, et la chaine de caractère contenant le caractère `0`.
+La fonction `strcmp` renvoie `0` si les deux chaînes sont identiques. Dans le cas contraire, elle renvoie la différence entre les deux caractères qui diffèrent. Il pourrait être intéressant de placer le `\0` au début de `auStack152` et ainsi comparer une chaîne de caractères vide avec notre premier argument vide lui aussi. Seulement, en envoyant `0` en argument de notre programme, `atoi` va bien convertir notre premier argument en `integer` `0`. En revanche, la comparaison va se faire entre la chaîne vide `auStack152`, et la chaine de caractères contenant le caractère `0`.
 
 Il nous faut alors trouver un argument qui permet à `atoi` de renvoyer `0`, et qui permet de construire une chaîne vide pour `strcmp`.
 
-`atoi` renvoi `0` si il reçoit en argument une chaîne de caractère vide. C'est parfait puisque cela nous permettra de :
+`atoi` renvoi `0` si il reçoit en argument une chaîne de caractères vide. C'est parfait puisque cela nous permettra de :
 1. Placer le `\0` au début de `auStack152`.
 2. Comparer 2 chaînes vides.
 
