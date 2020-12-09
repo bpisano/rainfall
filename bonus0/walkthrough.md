@@ -232,7 +232,7 @@ Nous devons donc déterminer notre adresse de retour. Rappelons-nous la `stack` 
 0xbfffe650:	0x00000000	0x00000000	0x00000000	0x00000000
 0xbfffe660:	0x00000000	0x00000000	0x00000000	0x00000000
 ```
-Notre `shell code` sera situé après nos `20` `A`. L'adresse de retour est donc `0xbfffe644`.
+Notre `shell code` sera situé après nos `20` `A`. L'adresse de retour est située à l'adresse `0xbfffe644`.
 
 Nous pouvons à présente construire nos entrées.
 
