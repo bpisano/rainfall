@@ -21,7 +21,7 @@ En effet, `0x20` équivaut à 32 en base10.
 
 Globalement, le code est une boucle infini, qui attend différentes entrées. Si l'entrée est valide, alors on passera à la prochaine condition. Il va donc nous falloir plusieurs étapes pour arriver à la conditon finale vu précédement. 
 
-On remarque dans le premier bloc de code, que l'entrée attendu est `auth `.
+On remarque dans le premier bloc de code, que l'entrée attendu semble être `auth `.
 ```C
  puVar6 = (uint8_t *)"auth ";
         do {
