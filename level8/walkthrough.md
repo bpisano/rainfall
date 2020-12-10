@@ -216,7 +216,7 @@ On suppose d'après le code, qu'il va falloir que notre dernière entrée soit `
 [...]
 ```
 
-On observe ici que le programme va mettre `mov` dans `eax+0x20`. Puis il y a un test avec `eax`.
+On observe ici que le programme va `mov` `eax + 0x20` dans `eax`. Puis il y a un test avec `eax`.
 Nous pouvons `break` à `0x080486e7` sur l'instruction `mov` afin de voir si la condition s'exécute bien lorsqu'on tape `login`. 
 
 ```
