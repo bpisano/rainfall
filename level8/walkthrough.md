@@ -66,7 +66,7 @@ auth AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 Notre hypothèse est vérifié. Lorsqu'on saisis moins de 31 caractères, on fait appel à le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
 
-Nous allons donc afficher la valeur de `auth  ` juste après le `strcpy`.
+Nous allons donc afficher la valeur de `_auth` juste après le `strcpy`.
 
 ```
 > (gdb) ni
@@ -77,10 +77,10 @@ Nous allons donc afficher la valeur de `auth  ` juste après le `strcpy`.
 0x804a008:	"AAAA\n"
 ```
 
-On retrouve bien nos `AAAA`, qui ont été copié dans `auth `.
+On retrouve bien nos `AAAA`, qui ont été copié dans `_auth `.
 Nous ne pourrons pas écrire 32 caractères après notre input `auth `, puisque ces caractères ne seront pas copiés en l'absence d'un appel à strcpy. Nous allons donc devoir trouver une autre solution pour arriver à notre condition finale qui est `auth[32] != '\0`.
 
-On voit au début du programme qu'il y a un printf qui va nous afficher les adresses de `auth ` et `service`. On a déterminé précédemment l'adresse de `_auth`. Déterminons maintenant celle de `_service`.
+On voit au début du programme qu'il y a un printf qui va nous afficher les adresses de `_auth` et `_service`. On a déterminé précédemment l'adresse de `_auth`. Déterminons maintenant celle de `_service`.
 
 ```C
 printf("%p, %p \n", _auth, _service);
@@ -94,8 +94,8 @@ service
 0x804a008, 0x804a018
 ```
 
-Nous avons bien retrouvé l'adresse de `auth ` : `0x804a008`. Nous avons maintenant l'adresse de `service` : `0x804a018`. 
-On remarque que l'adresse de `service` est décalée de `0x10` octets. 
+Nous avons bien retrouvé l'adresse de `_auth` : `0x804a008`. Nous avons maintenant l'adresse de `_service` : `0x804a018`. 
+On remarque que l'adresse de `_service` est décalée de `0x10` octets. 
 
 
 ```C
@@ -133,7 +133,7 @@ service AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Breakpoint 1, 0x080486ab in main ()
 ```
 
-Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. Nous avons testé avec peu de caractères, mais également avec un grand nombres. `strdupu` duplique la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
+Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. Nous avons testé avec peu de caractères, mais également avec un grand nombres. `strdup` duplique la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
 Il n'y a donc pas de limitation au niveau de `service`.
 
 Nous allons maintenant afficher la `stack` après l'appel à `strdup`.
@@ -166,8 +166,8 @@ Adresse de _service
 0x804a028:	0x00000000
 ```
 Au moment de l'affichage de la `stack`, nous nous trouvons juste après `strdup`. 
-On a affiché `auth ` et on retrouve bien nos `AAAA`.
-On a également visualisé les adresses de `auth ` et `service`, et on remarque bien que nos `BBBB` ont été dupliqué, puis assigné à la variable `_service`.
+On a affiché `_auth` et on retrouve bien nos `AAAA`.
+On a également visualisé les adresses de `_auth` et `_service`, et on remarque bien que nos `BBBB` ont été dupliqué, puis assigné à la variable `_service`.
 
 On remarque que l'`adresse` de `auth + 0x20` est égal à `0`.  
 `0x20` est égal à 32 en `base 10`.   
@@ -177,7 +177,7 @@ Nous avons vu précédement qu'il n'y avait pas de limitation avec `strdup`. On 
 Nous allons maintenant calculer la taille de la chaine de caractères nécessaire à la réalisation de `l'exploit`.
 
 ```
-[adresse de auth + 0x20] - [adresse de service]
+[adresse de _auth + 0x20] - [adresse de service]
 0x804a028 - 0x804a018 = 0x10
 ```
 
