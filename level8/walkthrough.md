@@ -64,7 +64,7 @@ auth AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 0x804a008, (nil)
 ```
 
-Notre hypothèse est vérifié. Lorsqu'on saisis moins de 31 caractères, on fait appel à le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
+Notre hypothèse est vérifiée. Lorsqu'on saisis moins de 31 caractères, on fait appel à le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
 
 Nous allons donc afficher la valeur de `_auth` juste après le `strcpy`.
 
@@ -161,7 +161,7 @@ On a également visualisé les adresses de `_auth` et `_service`, et on remarque
 
 On remarque que l'adresse de `_auth + 0x20` est égal à `0`.  
 `0x20` est égal à 32 en `base 10`.   
-`auth + 0x20` est équivalent à `auth[32]`. 
+`_auth + 0x20` est équivalent à `auth[32]`. 
 Nous avons vu précédement qu'il n'y avait pas de limitation avec `strdup`. On peut donc assigner une chaine de caractères suffisament grande à l'adresse de `_service` pour écraser l'octet à cette adresse de sorte à ce qu'il ne soit pas égal à `0`. `_auth + 0x20` sera donc différent de `\0`.
 
 Nous allons maintenant calculer la taille de la chaine de caractères nécessaire à la réalisation de l'exploit.
