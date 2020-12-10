@@ -64,7 +64,7 @@ auth AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 0x804a008, (nil)
 ```
 
-Notre hypothèse est vérifié. Lorsqu'on saisis moins de 31 caractères, on rentre dans le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
+Notre hypothèse est vérifié. Lorsqu'on saisis moins de 31 caractères, on fait appel à le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
 
 Nous allons donc afficher la valeur de `auth  ` juste après le `strcpy`.
 
