@@ -1,4 +1,3 @@
-
 # Format String Exploitation
 
 En décompilant le programme, on observe qu'il y a différents tests pour arriver à une condition finale. Si cette condition est respectée, alors un `shell` avec les droits de `level9` sera lancé.
@@ -19,9 +18,9 @@ if (auth[32] != '\0') {
 ```
 En effet, `0x20` équivaut à 32 en base10.
 
-Globalement, le code est une boucle infini, qui attend différentes entrées. Si l'entrée est valide, alors on passera à la prochaine condition. Il va donc nous falloir plusieurs étapes pour arriver à la conditon finale vu précédement. 
+Globalement, le code est une boucle infinie, qui attend différentes entrées. Si l'entrée est valide, on passera à la prochaine demande d'entrée.Il va donc nous falloir plusieurs étapes pour arriver à la conditon finale vu précédement. 
 
-On remarque dans le premier bloc de code, que l'entrée attendu semble être `auth `.
+On remarque dans la première partie du code, que l'entrée attendu semble être `auth `.
 ```C
  puVar6 = (uint8_t *)"auth ";
     do {
