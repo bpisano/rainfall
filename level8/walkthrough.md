@@ -64,7 +64,7 @@ auth AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 0x804a008, (nil)
 ```
 
-Notre hypothèse est vérifiée. Lorsqu'on saisis moins de 31 caractères, on fait appel à le `strcpy`. Si on en saisit plus, on ne rentre pas dedans. 
+Notre hypothèse est vérifiée. Lorsqu'on saisis moins de 31 caractères, on fait appel à `strcpy`. Si on en saisit plus, on ne fait pas appel à `strcpy`.
 
 Nous allons donc afficher la valeur de `_auth` juste après le `strcpy`.
 
@@ -78,9 +78,9 @@ Nous allons donc afficher la valeur de `_auth` juste après le `strcpy`.
 ```
 
 On retrouve bien nos `AAAA`, qui ont été copié dans `_auth`.
-Nous ne pourrons pas écrire 32 caractères après notre input `auth `, puisque ces caractères ne seront pas copiés en l'absence d'un appel à strcpy. Nous allons devoir trouver une autre solution pour arriver à notre condition finale qui est `auth[32] != '\0`.
+Nous ne pourrons pas écrire 32 caractères après notre input `auth `, puisque ces caractères ne seront pas copiés en l'absence d'un appel à `strcpy`. Nous allons devoir trouver une autre solution pour arriver à notre condition finale qui est `auth[32] != '\0`.
 
-On voit au début du programme qu'il y a un printf qui va nous afficher les adresses de `_auth` et `_service`. On a déterminé précédemment l'adresse de `_auth`. Déterminons maintenant celle de `_service`.
+On voit au début du programme qu'il y a un `printf` qui va nous afficher les adresses de `_auth` et `_service`. On a déterminé précédemment l'adresse de `_auth`. Déterminons maintenant celle de `_service`.
 
 ```C
 printf("%p, %p \n", _auth, _service);
@@ -94,7 +94,7 @@ service
 0x804a008, 0x804a018
 ```
 
-Nous avons bien retrouvé l'adresse de `_auth` : `0x804a008`. Nous avons maintenant l'adresse de `_service` : `0x804a018`. 
+Nous avons bien retrouvé l'adresse de `_auth` : `0x804a008` et nous avons maintenant l'adresse de `_service` : `0x804a018`. 
 On remarque que l'adresse de `_service` est décalée de `0x10` octets. 
 
 
@@ -102,7 +102,7 @@ On remarque que l'adresse de `_service` est décalée de `0x10` octets.
 _service = strdup(auStack137);
 ```
 
-Le reste du code n'est pas particulièrement explicite, et nous allons tenter de vérifier si, lorsqu'on saisi `service`, notre `input` va mener à un appel à `strdup`.
+Le reste du code n'est pas particulièrement explicite. Nous allons tenter de vérifier si, lorsqu'on saisi `service`, notre `input` va mener à un appel à `strdup`.
 
 Nous allons `break` au niveau de ce `strdup` pour vérifier si la fonction est appelée.
 
@@ -123,7 +123,7 @@ auth
 service AAAA
 ```
 
-Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. Nous n'avons pas testé avec un grand nombre de caractères puisque `strdup` duplique les caractères dans la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
+Notre hypothèse est vérifiée. Lorsqu'on saisit `service`, le programme va appeler la fonction `strdup`. `strdup` duplique les caractères dans la chaine tant qu'il ne rencontre pas de `\0`. Ici, il n'est pas précédé par une condition impliquant le nombre de caractères de l'entrée de l'utilisateur.
 Il n'y a donc pas de limitation au niveau de `service`.
 
 Nous allons maintenant afficher la `stack` après l'appel à `strdup`.
@@ -172,7 +172,7 @@ Nous allons maintenant calculer la taille de la chaine de caractères nécessair
                                                  = 16 (base 10)
 ```
 
-`0x10` est égal à `16` en `base10`. Nous devons donc écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20` et donc lancer un `shell`. On peut vérifier ça dans `gdb`.
+Nous devons donc écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20` et donc lancer un `shell`. On peut vérifier ça dans `gdb`.
 
 ```
 > (gdb) r
@@ -202,7 +202,7 @@ Breakpoint 1, 0x080486ab in main ()
 ```
 
 On voit bien que `_auth + 0x20` n'est plus égal à `0`.
-Il y a maintenant `0x0a` qui correspond au code ascii du caractère `\n`. On a vu précédemment qu'il fallait écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20`. Il s'avère que c'est `16` + `\n`. 
+Il y a maintenant `0x0a` qui correspond au code `ascii` du caractère `\n`. On a vu précédemment qu'il fallait écrire 16 caractères après `service` pour atteindre l'adresse de `_auth + 0x20`. Il s'avère que c'est `16` + `\n`. 
 Notre condition `auth[32] != '\0'` est bien respectée.
 
 On suppose d'après le code, qu'il va falloir que notre dernière entrée soit `login` pour que la conditon `auth[32] != '\0'` soit exécutée. On va vérifier cela dans `gdb`.
@@ -216,7 +216,7 @@ On suppose d'après le code, qu'il va falloir que notre dernière entrée soit `
 [...]
 ```
 
-On observe ici que le programme va mettre `mov` dans `eax+0x20` dans `eax`. Puis il y a un test avec `eax`.
+On observe ici que le programme va mettre `mov` dans `eax+0x20`. Puis il y a un test avec `eax`.
 Nous pouvons `break` à `0x080486e7` sur l'instruction `mov` afin de voir si la condition s'exécute bien lorsqu'on tape `login`. 
 
 ```
